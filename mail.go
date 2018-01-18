@@ -1,25 +1,33 @@
+/* 参考 https://qiita.com/Neetless/items/6c802dddc52fa09aaede */
+
+
 package main
 
 import (
     "log"
     "os"
+    "fmt"
 
-    "sandspace/smtp_test/smtp"
+    "net/smtp"
 )
 
 func main() {
     m := mail{
-        from:     "XXXXX@gmail.com",
-        username: "XXXXX@gmail.com",
-        password: "XXXXX",
-        to:       "XXXXX@hotmail.co.jp",
-        sub:      "test sub",
-        msg:      "test msg",
+        from:     "keyakko.dev@gmail.com",
+        username: "keyakko.dev@gmail.com",
+        password: "hogehoge",
+        to:       "keyakko.dev@gmail.com",
+        sub:      "クソメール",
+        msg:      "hogehogehogehogehogehogehogehogehogehogehogehogehogehoge",
     }
-
-    if err := gmailSend(m); err != nil {
-        log.Println(err)
-        os.Exit(1)
+    
+    for ;; {
+	    if err := gmailSend(m); err != nil {
+            log.Println(err)
+            os.Exit(1)
+	    break
+        }
+	fmt.Println("send")
     }
 }
 
@@ -39,8 +47,8 @@ func (m mail) body() string {
 }
 
 func gmailSend(m mail) error {
-    smtpSvr := "smtp.gmail.com:587"
-    auth := smtp.PlainAuth("", m.username, m.password, "smtp.gmail.com")
+    smtpSvr := "127.0.0.1:1025"
+    auth := smtp.PlainAuth("", m.username, m.password, "127.0.0.1")
     if err := smtp.SendMail(smtpSvr, auth, m.from, []string{m.to}, []byte(m.body())); err != nil {
         return err
     }
